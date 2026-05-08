@@ -1,0 +1,95 @@
+{
+  "projectType": "saas",
+  "projectName": "RufLab",
+  "projectDescription": "RufLab is a German AI phone assistant (KI-Telefonassistent) that automatically answers calls 24/7, books appointments, filters inquiries, and documents all interactions — no human intervention needed.",
+  "theme": "almond",
+  "primaryColor": "#696be9",
+  "lightColor": "#acb4e4",
+  "darkColor": "#f0f1f7",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "pricing"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "features/call-answering",
+              "features/appointment-booking",
+              "features/call-filtering",
+              "features/multilingual"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/overview",
+              "integrations/calendar",
+              "integrations/crm"
+            ]
+          },
+          {
+            "group": "Use Cases",
+            "pages": [
+              "use-cases/medical-practices",
+              "use-cases/trades",
+              "use-cases/tax-advisors",
+              "use-cases/car-dealerships",
+              "use-cases/property-management",
+              "use-cases/freelancers"
+            ]
+          },
+          {
+            "group": "Security & Compliance",
+            "pages": [
+              "security/gdpr",
+              "security/data-protection"
+            ]
+          },
+          {
+            "group": "Partner Program",
+            "pages": [
+              "partners/overview"
+            ]
+          },
+          {
+            "group": "Help",
+            "pages": [
+              "faq",
+              "contact"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "24/7 automatic call answering with no busy signal",
+    "Natural conversation in 30+ languages",
+    "Automatic appointment booking with calendar integration",
+    "Intelligent call filtering — route only important calls to humans",
+    "Real-time emergency escalation",
+    "Call analytics and full transcription dashboard",
+    "Outbound calling in all plans",
+    "GDPR-compliant, EU-hosted infrastructure",
+    "No hardware or coding knowledge required",
+    "Setup in under 1 hour with personal configuration included"
+  ],
+  "publicApiSurface": [
+    "Outbound call API (pass phone number, assistant calls automatically)",
+    "Calendar integrations: Google Calendar, Outlook, Apple Calendar",
+    "CRM integrations: HubSpot, Pipedrive, Salesforce",
+    "Automation integrations: Make.com, n8n",
+    "SMS notifications (0.15 € per SMS)",
+    "Dashboard: call logs, transcripts, analytics",
+    "Webhook/call routing rules (time-based, keyword-based, VIP lists)"
+  ]
+}

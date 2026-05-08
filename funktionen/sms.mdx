@@ -1,0 +1,60 @@
+---
+title: "SMS-Benachrichtigungen"
+description: "Nach jedem Gespräch sendet RufLab automatisch eine SMS-Benachrichtigung an deine Handynummer. So bist du sofort informiert, auch wenn du gerade nicht am Computer bist."
+---
+
+### So funktioniert es
+
+Sobald ein Anruf endet, verschickt RufLab eine SMS mit den wichtigsten Informationen aus dem Gespräch. Du legst selbst fest, wer die SMS bekommt und was darin steht. Optional kann die SMS auch direkt an den Anrufer gesendet werden, zum Beispiel als Bestätigung nach einer Terminbuchung.
+
+> SMS-Benachrichtigungen kosten 0,15 € pro SMS.
+
+<CardGroup cols={2}>
+  ### Beispiel-SMS
+</CardGroup>
+
+<Check>
+  Neuer Anruf von Thomas Becker:
+
+  Terminanfrage für Inspektion. Termin wurde für Montag 27.04. um 09:00 Uhr gebucht.
+</Check>
+
+## Einrichten
+
+<Frame>
+  ![Screen Recording2026 04 23at23 49 58 Ezgif Com Video To Gif Converter](/images/ScreenRecording2026-04-23at23.49.58-ezgif.com-video-to-gif-converter.gif)
+</Frame>
+
+<Steps>
+  <Step title="Öffne deinen Assistenten im Dashboard und wechsle zum Tab Nachbearbeitung">
+  </Step>
+  <Step title="Aktiviere den Schalter bei SMS nach Anruf">
+  </Step>
+  <Step title="Klicke auf den Eintrag, das SMS-Einstellungen-Fenster öffnet sich">
+  </Step>
+  <Step title='Trage einen Absendernamen ein, dieser wird dem Empfänger als Absender angezeigt, maximal 11 Zeichen, zum Beispiel "Praxis Müller"'>
+  </Step>
+  <Step title="Trage eine oder mehrere Empfänger-Nummern im Format +49 ein">
+  </Step>
+  <Step title="Optional: Aktiviere SMS auch an Anrufer senden, wenn der Anrufer nach dem Gespräch ebenfalls eine Zusammenfassung bekommen soll">
+  </Step>
+  <Step title="Passe die SMS-Vorlage nach Bedarf an">
+  </Step>
+  <Step title="Klicke auf Speichern">
+  </Step>
+</Steps>
+
+### SMS-Vorlage anpassen
+
+Die Standardvorlage lautet:
+
+> Neuer Anruf von `{{caller_name}}`: `{{call_reason}}`. `{{summary}}`
+
+Du kannst den Text frei anpassen. Folgende Variablen stehen zur Verfügung:
+
+### Hinweise
+
+- Der Absendername ist auf 11 Zeichen begrenzt, Leerzeichen zählen mit
+- Du kannst mehrere Empfänger-Nummern eintragen
+- Die Option "SMS auch an Anrufer senden" ist nützlich für Terminbestätigungen oder Rückrufbestätigungen
+- SMS-Benachrichtigungen und E-Mail-Benachrichtigungen lassen sich gleichzeitig aktivieren

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "almond",
+  "name": "RufLab",
+  "colors": {
+    "primary": "#696be9",
+    "light": "#acb4e4",
+    "dark": "#f0f1f7"
+  },
+  "favicon": "https://media.brand.dev/31df83bf-28ed-488a-8e11-8935226b514e.jpg",
+  "logo": {
+    "light": "https://media.brand.dev/8cee953b-5d70-4d2d-94b5-38f6efb6ff94.svg",
+    "dark": "https://media.brand.dev/8cee953b-5d70-4d2d-94b5-38f6efb6ff94.svg"
+  },
+
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Erste Schritte",
+            "pages": [
+              "introduction",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Dein KI-Assistent",
+            "pages": [
+              "ki-assistent/verhalten",
+              "ki-assistent/stimme-sprache",
+              "ki-assistent/begruessung",
+              "ki-assistent/wissensdatenbank",
+              "ki-assistent/prompt"
+            ]
+          },
+          {
+            "group": "Funktionen",
+            "pages": [
+              "funktionen/terminbuchung",
+              "funktionen/email",
+              "funktionen/sms",
+              "funktionen/webhook",
+              "funktionen/anrufweiterleitung"
+            ]
+          },
+          {
+            "group": "Telefonnummern",
+            "pages": [
+              "telefonnummern/ruflab-nummer"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "fonts": {
+    "heading": {
+      "family": "Inter",
+      "weight": 800
+    },
+    "body": {
+      "family": "Inter",
+      "weight": 400
+    }
+  },
+  "styling": {
+    "eyebrows": "section",
+    "mode": "wide"
+  },
+  "interaction": {
+    "drilldown": false
+  },
+  "appearance": {
+    "default": "light",
+    "strict": true
+  },
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/introduction",
+      "permanent": false
+    }
+  ]
+}

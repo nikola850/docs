@@ -1,0 +1,148 @@
+---
+title: "Anweisungen / Prompt "
+---
+
+Der System Prompt ist das Herzstück deines Assistenten. Er bestimmt, wer der Assistent ist, wie er spricht und was er in einem Gespräch tun soll.
+
+### Zusammenfassung
+
+- Starte immer mit einer **Vorlage**, passe sie dann auf dein Unternehmen an
+- Trenne den Prompt in klare **Abschnitte** mit `#` Überschriften
+- Definiere immer: Rolle, Ziel, Ton und Gesprächsablauf
+- Halte Anweisungen **kurz und konkret**, ein Satz pro Regel
+- **Teste** den Prompt nach jeder Änderung mit einem echten Anruf
+
+### Warum der Prompt entscheidend ist
+
+Ein schlecht geschriebener Prompt ist die häufigste Ursache für unerwartetes Verhalten. Der Assistent antwortet am Thema vorbei, fragt zu viel oder zu wenig, oder klingt unprofessionell.
+
+Ein guter Prompt gibt dem Assistenten klare Leitplanken. Er weiß, wer er ist, was er erreichen soll und wie er in verschiedenen Situationen reagiert.
+
+### Technische Rahmenbedingungen
+
+- **Zeichenlimit:** Maximal 10.000 Zeichen
+- **Formatierung:** Nutze `#` für Abschnitte und `-` für Aufzählungen
+- **Hauptaufgabe:** Definiere genau eine Hauptaufgabe pro Assistent
+- **Keine Widersprüche:** Sich widersprechende Anweisungen führen zu unvorhersehbarem Verhalten
+
+### Der Baukasten für einen starken Prompt
+
+Teile deinen Prompt immer in klar getrennte Abschnitte auf. Hier ein vollständiges Beispiel:
+
+```text
+# Über dich
+- Name: Anna
+- Rolle: Telefonassistentin
+- Unternehmen: Sanitär Schmidt GmbH
+
+# Ziel
+Anliegen des Anrufers aufnehmen und einen Rückruf organisieren.
+Dieser Schritt ist wichtig: Nimm immer den vollständigen Namen
+und die Rückrufnummer auf, bevor du das Gespräch beendest.
+
+# Ton
+- Ansprache: Sie
+- Stil: freundlich, ruhig, professionell
+- Antworten: kurz und klar, maximal 2-3 Sätze
+
+# Gesprächsablauf
+1. Begrüße den Anrufer
+2. Frage nach dem Anliegen
+3. Nimm Name und Rückrufnummer auf
+4. Bestätige die Angaben und verabschiede dich
+
+# Regeln
+- Nenne keine Preise ohne Rücksprache mit dem Team
+- Bei dringenden Notfällen leite den Anruf sofort weiter
+- Wenn du eine Frage nicht beantworten kannst, sage das ehrlich
+```
+
+### Was in jeden Abschnitt gehört
+
+**# Über dich** 
+
+Name, Rolle, Unternehmen und optionale Variablen wie die aktuelle Uhrzeit. Dieser Abschnitt gibt dem Assistenten seine Identität.
+
+**# Ziel** 
+
+Eine klare Aussage, was am Ende des Gesprächs erreicht sein soll. Hebe die wichtigste Regel mit "Dieser Schritt ist wichtig:" hervor.
+
+**# Ton** 
+
+Ansprache (Sie oder du), Stil und Antwortkürze. Definiere den Ton einmal hier, wiederhole ihn nicht im ganzen Prompt.
+
+**# Gesprächsablauf** 
+
+Eine nummerierte Reihenfolge der Gesprächsschritte. Je konkreter, desto konsistenter verhält sich der Assistent.
+
+**# Regeln** 
+
+Alles, was der Assistent niemals tun soll oder immer beachten muss. Dieser Abschnitt ist besonders wichtig: Der Assistent priorisiert Regeln, die hier stehen.
+
+### <u>Was du vermeiden solltest</u>
+
+**Zu viele Aufgaben in einem Prompt**
+
+```text
+# Schlechtes Beispiel
+
+Buche Termine, beantworte Fragen, leite Anrufe weiter,
+prüfe Bestellungen und nimm Reklamationen auf.
+```
+
+Ein Assistent mit zu vielen Aufgaben erledigt keine davon zuverlässig. Erstelle für komplexe Anforderungen mehrere Assistenten.
+
+**Unstrukturierter Fließtext**
+
+```text
+# Schlechtes Beispiel
+Du bist ein freundlicher Assistent der bei allen Fragen
+hilft und immer höflich ist und Termine buchen kann wenn
+jemand einen braucht aber auch weiterleiten wenn nötig...
+```
+
+Strukturiere stattdessen mit Abschnitten und Aufzählungen.
+
+**Widersprüchliche Anweisungen**
+
+```text
+# Schlechtes Beispiel
+- Sei immer freundlich und geduldig
+- Beende das Gespräch sofort, wenn der Anrufer
+  keine Angaben machen möchte
+```
+
+### Vorlagen
+
+Klicke auf **Vorlage laden** im Persönlichkeit-Tab. Wähle die Vorlage, die am besten zu deinem Anwendungsfall passt, und passe sie dann an:
+
+| Vorlage | Einsatz |
+| --- | --- |
+| Anrufbeantworter | Anliegen aufnehmen, Rückruf ermöglichen |
+| Terminbuchung | Termine direkt im Gespräch buchen |
+| Empfangsperson | Anrufe entgegennehmen, filtern und weiterleiten |
+| First Level Support | Häufige Fragen beantworten, einfache Probleme lösen |
+
+<Frame>
+  ![Screenshot 2026 05 05 At 13 05 28](/images/Screenshot-2026-05-05-at-13.05.28.png)
+</Frame>
+
+### Checkliste vor dem Speichern
+
+Bevor du den Prompt speicherst, prüfe folgende Punkte:
+
+- Name und Rolle des Assistenten sind definiert
+- Das Ziel des Gesprächs ist klar formuliert
+- Die Ansprache (Sie oder du) ist festgelegt
+- Ton und Stil sind beschrieben
+- Der Gesprächsablauf hat eine klare Reihenfolge
+- Es gibt keine widersprüchlichen Anweisungen
+- Wichtige Regeln sind im Abschnitt `# Regeln` aufgelistet
+
+### Prompt testen
+
+**Testanruf machen** Rufe deine verbundene Nummer an und führe ein realistisches Gespräch. Stelle Fragen, die deine Kunden typischerweise stellen.
+
+**Protokoll prüfen** Öffne das Gesprächsprotokoll im Dashboard nach dem Test. Hat der Assistent das Gesprächsziel erreicht? Fehlen Informationen?
+
+**Gezielt anpassen** Ändere immer nur eine Sache gleichzeitig. Mehrere Änderungen auf einmal machen es schwer zu verstehen, was das Verhalten beeinflusst hat.

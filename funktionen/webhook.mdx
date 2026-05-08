@@ -1,0 +1,121 @@
+---
+title: "Webhooks & API"
+description: "Mit Tools kannst du deinen Assistenten mit externen Systemen verbinden. Während eines Gesprächs ruft der Assistent eigenständig eine Webhook-URL auf und übergibt die Gesprächsdaten an dein System, zum Beispiel an Make.com, dein CRM oder deine eigene API."
+---
+
+### So funktioniert es
+
+Du definierst ein Tool mit einem Namen, einer Beschreibung und einer Webhook-URL. Der Assistent liest die Beschreibung und entscheidet selbst, wann er das Tool aufrufen soll. Du musst keine Logik programmieren, du erklärst dem Assistenten in Textform, wann er es nutzen soll.
+
+**Beispiel :**
+
+> Du erstellst ein Tool namens `crm_kontakt_erstellen` mit der Beschreibung "Wird aufgerufen, wenn ein neuer Anrufer Kontakt aufnimmt und noch nicht im System ist." Der Assistent erfasst Name und Telefonnummer und übergibt sie automatisch an dein CRM.
+
+### Vorlagen
+
+RufLab bietet drei Vorlagen als Ausgangspunkt:
+
+| Vorlage | Verwendung |
+| --- | --- |
+| Terminbuchung | Termin in externem System eintragen |
+| CRM Kontakt erstellen | Anrufer als neuen Kontakt anlegen |
+| Bestellstatus prüfen | Status einer Bestellung abfragen und vorlesen |
+
+<Frame>
+  ![Vorlage 1](/images/vorlage-1.png)
+</Frame>
+
+## Tool einrichten
+
+<Steps>
+  <Step title="Öffne deinen Assistenten im Dashboard und wechsle zum Tab Fähigkeiten">
+    Hier findest du alle aktiven Tools und den Button zum Hinzufügen neuer Tools.
+  </Step>
+  <Step title="Klicke auf Tool hinzufügen">
+    Der Button befindet sich am unteren Ende der Fähigkeiten-Seite.
+  </Step>
+  <Step title="Wähle optional eine Vorlage oder starte mit einem leeren Formular">
+    Vorlagen befüllen die wichtigsten Felder automatisch vor und sparen Zeit beim Einrichten.
+  </Step>
+  <Step title="Trage einen Namen ein, zum Beispiel 'crm_kontakt_erstellen', kein Leerzeichen, nur Kleinbuchstaben und Unterstriche">
+    Der Name darf keine Leerzeichen enthalten, nur Kleinbuchstaben und Unterstriche. Er wird intern verwendet und ist für Anrufer nicht sichtbar.
+  </Step>
+  <Step title="Trage eine Beschreibung ein, wann der Assistent dieses Tool aufrufen soll">
+    Der Assistent liest diese Beschreibung und entscheidet anhand des Gesprächsverlaufs, ob das Tool aufgerufen wird. Je konkreter die Beschreibung, desto zuverlässiger funktioniert das Tool.
+  </Step>
+  <Step title="Wähle die HTTP-Methode, in den meisten Fällen POST">
+    POST ist der Standard für Webhooks. Ändere dies nur, wenn dein System eine andere Methode erwartet.
+  </Step>
+  <Step title="Trage die Webhook-URL ein">
+    Das ist die URL, an die RufLab die Gesprächsdaten sendet. Du bekommst diese URL von [Make.com](http://Make.com), [Zapier](zapier.com) oder deiner eigenen API.
+  </Step>
+  <Step title="Füge bei Bedarf Headers hinzu">
+    Headers werden benötigt, wenn dein System eine Authentifizierung erwartet, zum Beispiel einen API-Schlüssel. Falls nicht nötig, lass dieses Feld leer.
+  </Step>
+  <Step title="Füge Parameter hinzu, die der Assistent erfassen soll">
+    Parameter sind die Daten, die der Assistent während des Gesprächs beim Anrufer erfragt und dann an deine Webhook-URL übergibt, zum Beispiel Name oder Telefonnummer.
+  </Step>
+  <Step title="Klicke auf Tool erstellen">
+    Das Tool ist sofort aktiv. Bei nächsten echten Anruf kann der Assistent es bereits verwenden.
+  </Step>
+</Steps>
+
+<Frame>
+  ![Filled](/images/filled.png)
+</Frame>
+
+### Parameter
+
+Parameter sind die Daten, die der Assistent aus dem Gespräch extrahiert und an deine Webhook-URL übergibt. Jeder Parameter hat:
+
+- **Name:** technischer Bezeichner, zum Beispiel `caller_name`
+- **Typ:** aktuell String für alle Felder
+- **Beschreibung:** erklärt dem Assistenten, was er erfragen soll, zum Beispiel "Name des Anrufers"
+- **Pflichtfeld:** wenn aktiviert, fragt der Assistent aktiv nach diesem Wert, bevor er das Tool aufruft
+
+Beispiel für `crm_kontakt_erstellen`:
+
+| Parameter | Beschreibung | Pflichtfeld |
+| --- | --- | --- |
+| caller\_name | Name des Anrufers | Ja |
+| phone\_number | Telefonnummer des Anrufers | Ja |
+| reason | Grund des Anrufs | Nein |
+
+### Mit [Make.com](http://Make.com) verbinden
+
+[Make.com](http://Make.com) ist die einfachste Möglichkeit, RufLab ohne Programmierkenntnisse mit anderen Tools zu verbinden.
+
+1. Erstelle ein neues Szenario in [Make.com](http://Make.com)
+2. Füge einen **Webhook**-Trigger hinzu
+3. Kopiere die generierte Webhook-URL
+4. Trage diese URL im RufLab-Tool unter **Webhook-URL** ein
+5. Verbinde in [Make.com](http://Make.com) weitere Module, zum Beispiel HubSpot, Google Sheets oder eine E-Mail
+
+> Tipp: Starte mit der Vorlage "CRM Kontakt erstellen" in RufLab und einem Webhook-Trigger in [Make.com](http://Make.com). Das ist die schnellste Möglichkeit, Anruferdaten automatisch in dein CRM zu übertragen.
+
+### Hinweise
+
+- Der Assistent ruft das Tool nur auf, wenn die Bedingung aus der Beschreibung zutrifft
+- Du kannst mehrere Tools pro Assistent einrichten
+- Pflichtfelder werden vom Assistenten aktiv erfragt, fehlende Pflichtfelder blockieren den Tool-Aufruf
+- Die Anrufweiterleitung muss nicht aktiviert sein, damit Tools funktionieren
+
+## Häufige Fragen
+
+<AccordionGroup>
+  <Accordion title="Muss ich programmieren können, um Tools zu nutzen?">
+    Nein. Mit [Make.com](http://Make.com) oder [Zapier](zapier.com) reichen Webhook-URLs. Kein Code nötig.
+  </Accordion>
+
+  <Accordion title="Wie weiß der Assistent, wann er das Tool aufrufen soll?">
+    Er liest die Beschreibung, die du einträgst, und entscheidet selbst anhand des Gesprächsverlaufs.
+  </Accordion>
+
+  <Accordion title="Kann ich testen, ob das Tool korrekt aufgerufen wird?">
+    Ja. Mache einen echten Testanruf und prüfe in [Make.com](http://Make.com) oder deiner API, ob die Daten ankommen.
+  </Accordion>
+
+  <Accordion title="Was passiert, wenn die Webhook-URL nicht erreichbar ist?">
+    Der Assistent informiert den Anrufer, dass die Aktion gerade nicht möglich ist, und fährt mit dem Gespräch fort.x
+  </Accordion>
+</AccordionGroup>

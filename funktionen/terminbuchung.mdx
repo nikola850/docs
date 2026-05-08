@@ -1,0 +1,99 @@
+---
+title: "Terminbuchung (cal.com)"
+---
+
+Dein Assistent kann Termine direkt im Gespräch buchen. Dafür verbindest du ihn einmalig mit [cal.com](http://cal.com). Nach der Einrichtung läuft alles automatisch.
+
+### Zusammenfassung
+
+1. [cal.com](http://cal.com) API-Schlüssel erstellen, Event ID notieren
+2. Keine Pflichtfelder im Event-Typ
+3. In RufLab: Terminbuchung aktivieren, Zugangsdaten eintragen
+4. Berechtigung und Bestätigungsweg wählen
+5. Testanruf machen und [cal.com](http://cal.com) prüfen
+
+### Voraussetzungen
+
+Bevor du anfängst, stelle sicher, dass du folgendes hast:
+
+- Ein aktives [cal.com](http://cal.com)-Konto
+- Einen Event-Typ in [cal.com](http://cal.com), der gebucht werden soll
+- Zugriff auf deinen RufLab-Assistenten
+
+## Phase 1: [cal.com](http://cal.com) vorbereiten
+
+**API-Schlüssel erstellen** Öffne in [cal.com](http://cal.com) die **Einstellungen** und wechsle zu **API-Schlüssel**. Erstelle einen neuen Schlüssel mit einem erkennbaren Namen, zum Beispiel "RufLab". Kopiere ihn sofort, er wird nur einmal angezeigt. Speichere ihn sicher.
+
+<Frame>
+  ![Screen Recording2026 05 08at11 36 06 Ezgif Com Video To Gif Converter](/images/ScreenRecording2026-05-08at11.36.06-ezgif.com-video-to-gif-converter.gif)
+</Frame>
+
+**Event-Typ prüfen** Öffne den Event-Typ, der gebucht werden soll, und kopiere die Event ID aus der URL.
+
+<Frame>
+  ![Screen Recording2026 05 08at11 37 23 Ezgif Com Video To Gif Converter](/images/ScreenRecording2026-05-08at11.37.23-ezgif.com-video-to-gif-converter.gif)
+</Frame>
+
+<Warning>
+  Wichtig: Der Event-Typ darf keine zusätzlichen Pflichtfelder enthalten. Diese verhindern die automatische Buchung durch RufLab.
+</Warning>
+
+**Benutzernamen notieren** Deinen [cal.com](http://cal.com) Benutzernamen findest du in deinem [cal.com](http://cal.com) Profil oder in der URL deiner Buchungsseite, zum Beispiel `cal.com/mein-name`.
+
+## Phase 2: RufLab einrichten
+
+**Terminbuchung aktivieren** 
+
+Öffne deinen Assistenten, wechsle zum Tab **Fähigkeiten** und aktiviere **Terminbuchung**.
+
+<Frame>
+  ![Activate Cal Com Ezgif Com Video To Gif Converter](/images/activate-cal.com-ezgif.com-video-to-gif-converter.gif)
+</Frame>
+
+**Zugangsdaten eintragen**
+
+Das Formular hat drei Bereiche:
+
+- **API Key:** Füge deinen [cal.com](http://cal.com) API-Schlüssel ein. Er beginnt mit `cal_live_...`
+- **Event-Typen:** Trage den Namen des Termins ein, zum Beispiel "Erstgespräch", dazu die Event ID und optional die Dauer in Minuten. Du kannst mehrere Event-Typen hinzufügen, wenn du verschiedene Terminarten anbietest.
+- **Benutzername:** Trage deinen [cal.com](http://cal.com) Benutzernamen ein, zum Beispiel `mein-name`
+
+<Frame>
+  ![Screenshot 2026 05 08 At 11 55 53](/images/Screenshot-2026-05-08-at-11.55.53.png)
+</Frame>
+
+**Mehrere Event-Typen** Klicke auf **Event-Typ hinzufügen**, um weitere Terminarten zu hinterlegen. Gib jedem Typ einen klaren Namen, der dem entspricht, wie Anrufer den Termin beschreiben würden.
+
+> Tipp: Wenn du mehrere Event-Typen hast, lege im Prompt fest, wann welcher Termin gebucht werden soll. Zum Beispiel: "Buche ein Erstgespräch für neue Kunden und eine Beratung für bestehende Kunden."
+
+**Verbinden** Klicke auf **[Cal.com](http://Cal.com) verbinden**. RufLab prüft die Zugangsdaten und aktiviert die Terminbuchung.
+
+### Prompt-Hinweis
+
+Nach der Verbindung zeigt RufLab automatisch einen fertigen Prompt-Text an. Kopiere ihn und füge ihn in den **System Prompt** deines Assistenten ein.
+
+Dieser Text erklärt dem Assistenten welche Tools er hat, wie er bei Buchungen vorgehen soll, wie er Stornierungen abwickelt und wie er Termine verschiebt.
+
+> Wichtig: Ohne diesen Prompt-Text weiß der Assistent nicht, wie er die Tools zuverlässig einsetzen soll. Füge ihn immer in den System Prompt ein.
+
+<Frame>
+  ![Screenshot 2026 05 08 At 11 56 25](/images/Screenshot-2026-05-08-at-11.56.25.png)
+</Frame>
+
+### Testen
+
+Mache nach der Einrichtung einen echten Testanruf und bitte den Assistenten, einen Termin zu buchen. Prüfe anschließend in [cal.com](http://cal.com), ob der Termin korrekt eingetragen wurde.
+
+### Häufige Probleme
+
+<Accordion title="Verbindung schlägt fehl">
+  Prüfe ob der API-Schlüssel korrekt kopiert wurde und ob der Benutzername genau mit deinem [cal.com](http://cal.com)-Profil übereinstimmt.
+</Accordion>
+
+<Accordion title="Der Assistent bucht nicht">
+  Stelle sicher, dass der Event-Typ in [cal.com](http://cal.com) keine zusätzlichen Pflichtfelder enthält und dass freie Zeitfenster verfügbar sind.
+</Accordion>
+
+<Accordion title="Falscher Termin wird gebucht">
+  Prüfe die Namen der Event-Typen und passe den Prompt an, damit der Assistent klar unterscheiden kann, welcher Typ wann gebucht werden soll.
+</Accordion>
