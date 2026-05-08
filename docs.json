@@ -7,7 +7,10 @@
     "light": "#acb4e4",
     "dark": "#f0f1f7"
   },
-  "favicon": "https://media.brand.dev/31df83bf-28ed-488a-8e11-8935226b514e.jpg",
+  "favicon": {
+    "light": "https://media.brand.dev/31df83bf-28ed-488a-8e11-8935226b514e.jpg",
+    "dark": "https://media.brand.dev/31df83bf-28ed-488a-8e11-8935226b514e.jpg"
+  },
   "logo": {
     "light": "https://media.brand.dev/8cee953b-5d70-4d2d-94b5-38f6efb6ff94.svg",
     "dark": "https://media.brand.dev/8cee953b-5d70-4d2d-94b5-38f6efb6ff94.svg"
@@ -76,11 +79,5 @@
     "default": "light",
     "strict": true
   },
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/introduction",
-      "permanent": false
-    }
-  ]
+  "redirects": []
 }
