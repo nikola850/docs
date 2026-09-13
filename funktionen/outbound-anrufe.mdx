@@ -148,27 +148,3 @@ Typischer Ablauf: Neuer Lead im Formular oder CRM → HTTP-Modul startet den Anr
 <Note>
   **Schlüssel schützen.** Der API-Schlüssel gehört nur auf deinen Server oder in Make.com. Baue ihn nie in eine Website ein, die Besucher im Browser laden. Unter **Outbound & API** kannst du einen Schlüssel jederzeit widerrufen und einen neuen erstellen.
 </Note>
-
-## Häufige Fragen
-
-<AccordionGroup>
-  <Accordion title="Welche Nummer sehen die Angerufenen?">
-    Die Rufnummer, die mit deinem Assistenten verbunden ist. Wenn du mehrere Assistenten mit Rufnummer hast, wählst du über `agent_id`, welcher anruft.
-  </Accordion>
-
-  <Accordion title="Kann ich Anrufe zeitlich planen?">
-    Ja. Gib `scheduled_at` mit, zum Beispiel für den nächsten Vormittag. Der Anruf wartet mit dem Status `queued` und startet automatisch.
-  </Accordion>
-
-  <Accordion title="Was passiert, wenn alle Leitungen belegt sind?">
-    Der Anruf wird eingereiht und startet, sobald ein Gespräch endet. Du bekommst in dem Fall die Antwort `202` statt `201`, sonst ändert sich nichts.
-  </Accordion>
-
-  <Accordion title="Wie viele Anfragen kann ich senden?">
-    Bis zu 120 Einzelanrufe pro Minute und 10 Listen pro Minute mit je bis zu 500 Nummern. Bei mehr antwortet die API mit `429`, warte dann kurz und sende erneut.
-  </Accordion>
-
-  <Accordion title="Bekomme ich eine Fehlermeldung, wenn etwas nicht stimmt?">
-    Ja, immer in derselben Form: `{ "error": { "code": "…", "message": "…" } }`. Die Nachricht ist auf Deutsch und sagt dir, welches Feld fehlt oder warum der Anruf nicht möglich ist, zum Beispiel weil dem Assistenten noch keine Rufnummer verbunden ist.
-  </Accordion>
-</AccordionGroup>
