@@ -10,7 +10,7 @@ title: "Outbound-Anrufe (API)"
 
 Jeder Outbound-Anruf ist eine einzelne HTTP-Anfrage an die RufLab-API. Darin steht die Rufnummer, die angerufen werden soll. RufLab startet den Anruf innerhalb weniger Sekunden. Nach dem Gespräch findest du Zusammenfassung und Transkript wie gewohnt unter **Anrufe** oder holst sie per API ab.
 
-Als Anrufer erscheint die Rufnummer, die mit deinem Assistenten verbunden ist.
+Als Anrufer erscheint die Rufnummer, die mit deinem Assistenten verbunden ist. Auf Wunsch stattdessen deine eigene Firmennummer, siehe [Eigene Rufnummer als Anrufer](#eigene-rufnummer-als-anrufer).
 
 ## Einrichten
 
@@ -87,7 +87,7 @@ curl -X POST "https://app.ruflab.com/api/v1/outbound" \
 }
 ```
 
-Merke dir die `id`. Damit fragst du später Status und Ergebnis ab.
+Merke dir die `id`. Damit fragst du später Status und Ergebnis ab. `from` ist die Rufnummer, die der Angerufene sieht.
 
 ## Mehrere Anrufe auf einmal
 
@@ -121,6 +121,26 @@ Sobald das Gespräch beendet ist, enthält die Antwort unter `call` Dauer, Zusam
 | `cancelled` | Vor dem Start abgebrochen |
 
 Ein Gespräch dauert typischerweise ein bis fünf Minuten. Frage den Status nicht öfter als alle 10 bis 15 Sekunden ab. Mit `GET https://app.ruflab.com/api/v1/calls` bekommst du alle deiner Outbound-Anrufe, neueste zuerst.
+
+## Eigene Rufnummer als Anrufer
+
+Standardmäßig sehen Angerufene die RufLab-Nummer deines Assistenten. Sollen Anrufe stattdessen von deiner eigenen Firmennummer kommen, hinterlegst du sie unter **Outbound & API → Eigene Rufnummer**. Eingehende Anrufe laufen weiterhin über die RufLab-Nummer, daran ändert sich nichts.
+
+<Steps>
+  <Step title="Klicke auf Rufnummer hinzufügen und trage deine Nummer ein">
+    Die Nummer muss dir gehören und in den nächsten Sekunden erreichbar sein, zum Beispiel deine Zentrale oder dein Handy.
+  </Step>
+  <Step title="Nimm den Anruf entgegen und gib den Code ein">
+    RufLab zeigt dir einen 6-stelligen Code und ruft die Nummer sofort an. Tippe den Code auf der Telefontastatur ein. Danach steht die Nummer in der Liste als **Verifiziert**.
+  </Step>
+  <Step title="Wähle unter Verwendet von den Assistenten">
+    Ab jetzt zeigt dieser Assistent bei ausgehenden Anrufen deine Nummer an. Im Tab Fähigkeiten steht bei Outbound-Anrufe dann „Ruft an von … (eigene Rufnummer)“, und in der API-Antwort enthält `from` deine Nummer.
+  </Step>
+</Steps>
+
+<Note>
+  Pro Konto kannst du bis zu 3 eigene Rufnummern hinterlegen, pro Assistent eine. Entfernst du die Nummer wieder, ruft der Assistent von seiner RufLab-Nummer an. Verwende nur Rufnummern, die dir gehören.
+</Note>
 
 ## Mit Make.com verbinden
 
