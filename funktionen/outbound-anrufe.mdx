@@ -1,0 +1,218 @@
+---
+title: "Outbound-Anrufe (API)"
+description: "Dein Assistent ruft Personen aktiv an, sobald dein System ihm eine Rufnummer übergibt. Per Klick im Dashboard, aus deinem CRM, aus Make.com oder aus eigenem Code."
+icon: "phone-arrow-up-right"
+---
+
+Bisher hat dein Assistent Anrufe entgegengenommen. Mit Outbound-Anrufen dreht sich das um: Du übergibst RufLab eine Rufnummer, und der Assistent ruft diese Person an. Typische Einsätze sind Rückrufe zu Anfragen aus einem Webformular, die Qualifizierung neuer Leads oder Terminerinnerungen.
+
+<Note>
+  **Verfügbar ab dem Betrieb-Tarif.** Im Betrieb-Tarif führt dein Assistent bis zu 10 Gespräche gleichzeitig, im Mittelstand-Tarif bis zu 20. Ausgehende Minuten zählen zum Minutenkontingent deines Tarifs wie eingehende.
+</Note>
+
+## So funktioniert es
+
+Jeder Outbound-Anruf ist eine einzelne HTTP-Anfrage an die RufLab-API. Darin steht die Rufnummer, die angerufen werden soll, und optional Informationen zur Person, die der Assistent im Gespräch verwenden soll. RufLab startet den Anruf innerhalb weniger Sekunden. Nach dem Gespräch findest du Zusammenfassung und Transkript wie gewohnt unter **Anrufe** oder holst sie per API ab.
+
+Als Anrufer erscheint die Rufnummer, die mit deinem Assistenten verbunden ist.
+
+## Einrichten
+
+<Steps>
+  <Step title="Verbinde eine Rufnummer mit deinem Assistenten">
+    Öffne deinen Assistenten im Dashboard und klicke auf **Rufnummer verbinden**. Ohne Rufnummer kann der Assistent nicht anrufen. Siehe auch [RufLab-Nummer nutzen](/telefonnummern/ruflab-nummer).
+  </Step>
+  <Step title="Aktiviere Outbound-Anrufe im Tab Fähigkeiten">
+    Schalte den Eintrag **Outbound-Anrufe** ein. Ein Fenster zeigt dir die fertige URL und einen Beispiel-Body für genau diesen Assistenten. Über das Zahnrad öffnest du das Fenster jederzeit wieder.
+  </Step>
+  <Step title="Erstelle einen API-Schlüssel">
+    Gehe im Menü auf **Outbound & API** und klicke auf **Neuen Schlüssel erstellen**. Der Schlüssel beginnt mit `rl_live_` und wird genau einmal angezeigt. Speichere ihn sicher, zum Beispiel in deinem Passwort-Manager.
+  </Step>
+  <Step title="Starte einen Test-Anruf">
+    Auf derselben Seite klickst du auf **Test-Anruf**, wählst den Assistenten und trägst deine eigene Handynummer ein. Dein Telefon klingelt innerhalb weniger Sekunden und du hörst, wie der Assistent das Gespräch eröffnet.
+  </Step>
+</Steps>
+
+<Tip>
+  Für den Test-Anruf brauchst du noch keinen API-Schlüssel. Er ist der schnellste Weg zu prüfen, ob Begrüßung und Prompt für ausgehende Gespräche passen.
+</Tip>
+
+## Anruf per API starten
+
+**URL (Methode: POST)**
+
+```text
+https://app.ruflab.com/api/v1/outbound
+```
+
+**Body**
+
+```json
+{
+  "api_key": "rl_live_DEIN_SCHLUESSEL",
+  "to": "+49 151 12345678",
+  "agent_id": "18975aab-358e-4ed7-94a1-11f0d089d2d7",
+  "variables": {
+    "kunde_name": "Frau Müller",
+    "anfrage": "Treppenlift für ein Einfamilienhaus"
+  }
+}
+```
+
+<ParamField body="api_key" type="string" required>
+  Dein API-Schlüssel. Alternativ kannst du ihn als Header `Authorization: Bearer rl_live_…` senden und im Body weglassen.
+</ParamField>
+
+<ParamField body="to" type="string" required>
+  Rufnummer der Person, die angerufen werden soll. International (`+49 151 12345678`) oder national (`0151 12345678`, wird als deutsche Nummer gelesen). Leerzeichen und Bindestriche sind erlaubt.
+</ParamField>
+
+<ParamField body="agent_id" type="string">
+  Welcher Assistent anruft. Die ID findest du im Fenster **Outbound-Anrufe** unter Fähigkeiten. Ohne Angabe ruft dein Assistent mit verbundener Rufnummer an.
+</ParamField>
+
+<ParamField body="variables" type="object">
+  Informationen zur Person, die der Assistent im Gespräch kennen soll. Siehe [Variablen](#variablen-im-gesprach-verwenden).
+</ParamField>
+
+<ParamField body="external_id" type="string">
+  Deine eigene Referenz, zum Beispiel die Lead-Nummer aus dem CRM. Dieselbe `external_id` löst nie einen zweiten Anruf aus. So kannst du eine Anfrage gefahrlos wiederholen.
+</ParamField>
+
+<ParamField body="scheduled_at" type="string">
+  Zeitpunkt für den Anruf im ISO-Format, zum Beispiel `2026-09-15T09:30:00+02:00`. Bis 30 Tage im Voraus. Ohne Angabe wird sofort angerufen.
+</ParamField>
+
+**Beispiel mit curl**
+
+```bash
+curl -X POST "https://app.ruflab.com/api/v1/outbound" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "api_key": "rl_live_DEIN_SCHLUESSEL",
+    "to": "+49 151 12345678",
+    "variables": { "kunde_name": "Frau Müller" },
+    "external_id": "lead-1042"
+  }'
+```
+
+**Antwort**
+
+```json
+{
+  "id": "7e3c9a2e-5f1b-4c0a-9d2e-1a2b3c4d5e6f",
+  "status": "in_progress",
+  "to": "+4915112345678",
+  "from": "+4921919413975",
+  "external_id": "lead-1042",
+  "created_at": "2026-09-14T09:12:04.318Z",
+  "call": null
+}
+```
+
+Merke dir die `id`. Damit fragst du später Status und Ergebnis ab.
+
+## Variablen im Gespräch verwenden
+
+Alles, was du unter `variables` mitschickst, kann der Assistent im Gespräch verwenden. Dafür schreibst du Platzhalter in doppelten geschweiften Klammern in die [Begrüßung](/ki-assistent/begruessung) oder den [Prompt](/ki-assistent/prompt):
+
+```text
+Guten Tag {{kunde_name}}, hier ist Alex von Treppenlift Pilot.
+Sie hatten eine Anfrage zu {{anfrage}} gestellt. Besteht aktuell noch Bedarf?
+```
+
+Beim Anruf ersetzt RufLab jeden Platzhalter durch den mitgeschickten Wert. Der Assistent sagt dann tatsächlich „Guten Tag Frau Müller, …“. Im Prompt kannst du auf dieselbe Weise Hintergrundwissen mitgeben, das der Assistent kennt, aber nicht vorliest, zum Beispiel `Die Person wohnt in {{ort}} und hat Pflegegrad {{pflegegrad}}.`
+
+Die Namen der Variablen wählst du frei. Erlaubt sind Buchstaben, Zahlen und Unterstriche, bis zu 50 Variablen pro Anruf.
+
+<Warning>
+  Jeder Platzhalter, der in Begrüßung oder Prompt steht, muss bei jedem Anruf mitgeschickt werden. Fehlt ein Wert, kann der Anruf nicht gestartet werden.
+</Warning>
+
+## Mehrere Anrufe auf einmal
+
+Bis zu 500 Rufnummern übergibst du in einer Anfrage an `https://app.ruflab.com/api/v1/outbound/batch`. RufLab arbeitet die Liste automatisch ab, mit so vielen parallelen Gesprächen, wie dein Tarif erlaubt. Du musst nichts takten.
+
+```json
+{
+  "api_key": "rl_live_DEIN_SCHLUESSEL",
+  "calls": [
+    { "to": "+49 151 12345678", "variables": { "kunde_name": "Frau Müller" }, "external_id": "lead-1042" },
+    { "to": "+49 176 12345678", "variables": { "kunde_name": "Herr Schmidt" }, "external_id": "lead-1043" }
+  ]
+}
+```
+
+## Status und Ergebnis abfragen
+
+```bash
+curl "https://app.ruflab.com/api/v1/calls/ANRUF_ID" \
+  -H "Authorization: Bearer rl_live_DEIN_SCHLUESSEL"
+```
+
+Sobald das Gespräch beendet ist, enthält die Antwort unter `call` Dauer, Zusammenfassung und Transkript.
+
+| Status | Bedeutung |
+| --- | --- |
+| `queued` | Wartet auf eine freie Leitung oder auf den geplanten Zeitpunkt |
+| `in_progress` | Es klingelt oder das Gespräch läuft |
+| `completed` | Gespräch beendet, Ergebnis liegt vor |
+| `failed` | Nicht zustande gekommen, `error` nennt den Grund, zum Beispiel `call_no_answer` |
+| `cancelled` | Vor dem Start abgebrochen |
+
+Ein Gespräch dauert typischerweise ein bis fünf Minuten. Frage den Status nicht öfter als alle 10 bis 15 Sekunden ab. Mit `GET https://app.ruflab.com/api/v1/calls` bekommst du alle deiner Outbound-Anrufe, neueste zuerst.
+
+## Mit Make.com verbinden
+
+Du brauchst kein Programmieren. In [Make.com](http://Make.com), [Zapier](https://zapier.com) oder n8n genügt ein HTTP-Modul:
+
+| Einstellung | Wert |
+| --- | --- |
+| Methode | `POST` |
+| URL | `https://app.ruflab.com/api/v1/outbound` |
+| Body-Typ | JSON |
+| Body | `api_key`, `to` und deine `variables` aus den vorherigen Modulen |
+
+Typischer Ablauf: Neuer Lead im Formular oder CRM → HTTP-Modul startet den Anruf → nach fünf Minuten holt ein zweites HTTP-Modul das Ergebnis ab und schreibt die Zusammenfassung zurück ins CRM. In Make.com heißt das Modul „HTTP → Make a request“, in Zapier „Webhooks by Zapier → Custom Request“.
+
+<Tip>
+  Nutze die Lead-ID deines CRM als `external_id`. Wenn dein Szenario versehentlich zweimal läuft, bekommt die Person trotzdem nur einen Anruf.
+</Tip>
+
+## Hinweise
+
+<Note>
+  **Einwilligung.** Automatisierte Anrufe an Verbraucher setzen deren vorherige Einwilligung voraus (§ 7 UWG). Du bist als Auftraggeber dafür verantwortlich, dass die angerufenen Personen der telefonischen Kontaktaufnahme zugestimmt haben.
+</Note>
+
+<Note>
+  **Nicht erreicht.** Klingelt es 60 Sekunden ohne Antwort, endet der Anruf mit dem Status `failed` und dem Grund `call_no_answer`. RufLab wiederholt den Anruf nicht automatisch. Starte ihn bei Bedarf erneut.
+</Note>
+
+<Note>
+  **Schlüssel schützen.** Der API-Schlüssel gehört nur auf deinen Server oder in Make.com. Baue ihn nie in eine Website ein, die Besucher im Browser laden. Unter **Outbound & API** kannst du einen Schlüssel jederzeit widerrufen und einen neuen erstellen.
+</Note>
+
+## Häufige Fragen
+
+<AccordionGroup>
+  <Accordion title="Welche Nummer sehen die Angerufenen?">
+    Die Rufnummer, die mit deinem Assistenten verbunden ist. Wenn du mehrere Assistenten mit Rufnummer hast, wählst du über `agent_id`, welcher anruft.
+  </Accordion>
+
+  <Accordion title="Kann ich Anrufe zeitlich planen?">
+    Ja. Gib `scheduled_at` mit, zum Beispiel für den nächsten Vormittag. Der Anruf wartet mit dem Status `queued` und startet automatisch.
+  </Accordion>
+
+  <Accordion title="Was passiert, wenn alle Leitungen belegt sind?">
+    Der Anruf wird eingereiht und startet, sobald ein Gespräch endet. Du bekommst in dem Fall die Antwort `202` statt `201`, sonst ändert sich nichts.
+  </Accordion>
+
+  <Accordion title="Wie viele Anfragen kann ich senden?">
+    Bis zu 120 Einzelanrufe pro Minute und 10 Listen pro Minute mit je bis zu 500 Nummern. Bei mehr antwortet die API mit `429`, warte dann kurz und sende erneut.
+  </Accordion>
+
+  <Accordion title="Bekomme ich eine Fehlermeldung, wenn etwas nicht stimmt?">
+    Ja, immer in derselben Form: `{ "error": { "code": "…", "message": "…" } }`. Die Nachricht ist auf Deutsch und sagt dir, welches Feld fehlt oder warum der Anruf nicht möglich ist, zum Beispiel weil dem Assistenten noch keine Rufnummer verbunden ist.
+  </Accordion>
+</AccordionGroup>

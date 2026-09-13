@@ -45,6 +45,7 @@
               "funktionen/email",
               "funktionen/sms",
               "funktionen/webhook",
+              "funktionen/outbound-anrufe",
               "funktionen/anrufweiterleitung"
             ]
           },
