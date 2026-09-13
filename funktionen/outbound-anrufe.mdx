@@ -4,9 +4,17 @@ description: "Dein Assistent ruft Personen aktiv an, sobald dein System ihm eine
 icon: "phone-arrow-up-right"
 ---
 
+Bisher hat dein Assistent Anrufe entgegengenommen. Mit Outbound-Anrufen dreht sich das um: Du übergibst RufLab eine Rufnummer, und der Assistent ruft diese Person an. Typische Einsätze sind Rückrufe zu Anfragen aus einem Webformular, die Qualifizierung neuer Leads oder Terminerinnerungen.
+
+<Note>
+  **Verfügbar ab dem Betrieb-Tarif.** Im Betrieb-Tarif führt dein Assistent bis zu 10 Gespräche gleichzeitig, im Mittelstand-Tarif bis zu 20. Ausgehende Minuten zählen zum Minutenkontingent deines Tarifs wie eingehende.
+</Note>
+
 ## So funktioniert es
 
-Jeder Outbound-Anruf ist eine einzelne HTTP-Anfrage an die RufLab-API. Darin steht die Rufnummer, die angerufen werden soll, und optional Informationen zur Person, die der Assistent im Gespräch verwenden soll. RufLab startet den Anruf innerhalb weniger Sekunden. 
+Jeder Outbound-Anruf ist eine einzelne HTTP-Anfrage an die RufLab-API. Darin steht die Rufnummer, die angerufen werden soll. RufLab startet den Anruf innerhalb weniger Sekunden. Nach dem Gespräch findest du Zusammenfassung und Transkript wie gewohnt unter **Anrufe** oder holst sie per API ab.
+
+Als Anrufer erscheint die Rufnummer, die mit deinem Assistenten verbunden ist.
 
 ## Einrichten
 
@@ -43,11 +51,7 @@ https://app.ruflab.com/api/v1/outbound
 {
   "api_key": "rl_live_DEIN_SCHLUESSEL",
   "to": "+49 151 12345678",
-  "agent_id": "18975aab-358e-4ed7-94a1-11f0d089d2d7",
-  "variables": {
-    "kunde_name": "Frau Müller",
-    "anfrage": "Treppenlift für ein Einfamilienhaus"
-  }
+  "agent_id": "18975aab-358e-4ed7-94a1-11f0d089d2d7"
 }
 ```
 
@@ -60,15 +64,7 @@ https://app.ruflab.com/api/v1/outbound
 </ParamField>
 
 <ParamField body="agent_id" type="string">
-  Welcher Assistent anruft. Die ID findest du im Fenster **Outbound-Anrufe** unter Fähigkeiten. Ohne Angabe ruft dein Assistent mit verbundener Rufnummer an.
-</ParamField>
-
-<ParamField body="variables" type="object">
-  Informationen zur Person, die der Assistent im Gespräch kennen soll. Siehe [Variablen](#variablen-im-gesprach-verwenden).
-</ParamField>
-
-<ParamField body="external_id" type="string">
-  Deine eigene Referenz, zum Beispiel die Lead-Nummer aus dem CRM. Dieselbe `external_id` löst nie einen zweiten Anruf aus. So kannst du eine Anfrage gefahrlos wiederholen.
+  Welcher Assistent anruft. Die ID findest du auf der Einstellungsseite des Assistenten. Ohne Angabe ruft dein Assistent mit verbundener Rufnummer an.
 </ParamField>
 
 <ParamField body="scheduled_at" type="string">
@@ -82,9 +78,7 @@ curl -X POST "https://app.ruflab.com/api/v1/outbound" \
   -H "Content-Type: application/json" \
   -d '{
     "api_key": "rl_live_DEIN_SCHLUESSEL",
-    "to": "+49 151 12345678",
-    "variables": { "kunde_name": "Frau Müller" },
-    "external_id": "lead-1042"
+    "to": "+49 151 12345678"
   }'
 ```
 
@@ -96,30 +90,12 @@ curl -X POST "https://app.ruflab.com/api/v1/outbound" \
   "status": "in_progress",
   "to": "+4915112345678",
   "from": "+4921919413975",
-  "external_id": "lead-1042",
   "created_at": "2026-09-14T09:12:04.318Z",
   "call": null
 }
 ```
 
 Merke dir die `id`. Damit fragst du später Status und Ergebnis ab.
-
-## Variablen im Gespräch verwenden
-
-Alles, was du unter `variables` mitschickst, kann der Assistent im Gespräch verwenden. Dafür schreibst du Platzhalter in doppelten geschweiften Klammern in die [Begrüßung](/ki-assistent/begruessung) oder den [Prompt](/ki-assistent/prompt):
-
-```text
-Guten Tag {{kunde_name}}, hier ist Alex von Treppenlift Pilot.
-Sie hatten eine Anfrage zu {{anfrage}} gestellt. Besteht aktuell noch Bedarf?
-```
-
-Beim Anruf ersetzt RufLab jeden Platzhalter durch den mitgeschickten Wert. Der Assistent sagt dann tatsächlich „Guten Tag Frau Müller, …“. Im Prompt kannst du auf dieselbe Weise Hintergrundwissen mitgeben, das der Assistent kennt, aber nicht vorliest, zum Beispiel `Die Person wohnt in {{ort}} und hat Pflegegrad {{pflegegrad}}.`
-
-Die Namen der Variablen wählst du frei. Erlaubt sind Buchstaben, Zahlen und Unterstriche, bis zu 50 Variablen pro Anruf.
-
-<Warning>
-  Jeder Platzhalter, der in Begrüßung oder Prompt steht, muss bei jedem Anruf mitgeschickt werden. Fehlt ein Wert, kann der Anruf nicht gestartet werden.
-</Warning>
 
 ## Mehrere Anrufe auf einmal
 
@@ -129,8 +105,8 @@ Bis zu 500 Rufnummern übergibst du in einer Anfrage an `https://app.ruflab.com/
 {
   "api_key": "rl_live_DEIN_SCHLUESSEL",
   "calls": [
-    { "to": "+49 151 12345678", "variables": { "kunde_name": "Frau Müller" }, "external_id": "lead-1042" },
-    { "to": "+49 176 12345678", "variables": { "kunde_name": "Herr Schmidt" }, "external_id": "lead-1043" }
+    { "to": "+49 151 12345678" },
+    { "to": "+49 176 12345678" }
   ]
 }
 ```
@@ -163,13 +139,9 @@ Du brauchst kein Programmieren. In [Make.com](http://Make.com), [Zapier](https:/
 | Methode | `POST` |
 | URL | `https://app.ruflab.com/api/v1/outbound` |
 | Body-Typ | JSON |
-| Body | `api_key`, `to` und deine `variables` aus den vorherigen Modulen |
+| Body | `api_key` und `to` aus den vorherigen Modulen |
 
 Typischer Ablauf: Neuer Lead im Formular oder CRM → HTTP-Modul startet den Anruf → nach fünf Minuten holt ein zweites HTTP-Modul das Ergebnis ab und schreibt die Zusammenfassung zurück ins CRM. In Make.com heißt das Modul „HTTP → Make a request“, in Zapier „Webhooks by Zapier → Custom Request“.
-
-<Tip>
-  Nutze die Lead-ID deines CRM als `external_id`. Wenn dein Szenario versehentlich zweimal läuft, bekommt die Person trotzdem nur einen Anruf.
-</Tip>
 
 ## Hinweise
 
