@@ -1,0 +1,150 @@
+---
+title: "Outbound-Anrufe (API)"
+---
+
+<Note>
+  **Verfügbar ab dem Betrieb-Tarif.** Im Betrieb-Tarif führt dein Assistent bis zu 10 Gespräche gleichzeitig, im Mittelstand-Tarif bis zu 20. Ausgehende Minuten zählen zum Minutenkontingent deines Tarifs wie eingehende.
+</Note>
+
+## So funktioniert es
+
+Jeder Outbound-Anruf ist eine einzelne HTTP-Anfrage an die RufLab-API. Darin steht die Rufnummer, die angerufen werden soll. RufLab startet den Anruf innerhalb weniger Sekunden. Nach dem Gespräch findest du Zusammenfassung und Transkript wie gewohnt unter **Anrufe** oder holst sie per API ab.
+
+Als Anrufer erscheint die Rufnummer, die mit deinem Assistenten verbunden ist.
+
+## Einrichten
+
+<Steps>
+  <Step title="Verbinde eine Rufnummer mit deinem Assistenten">
+    Öffne deinen Assistenten im Dashboard und klicke auf **Rufnummer verbinden**. Ohne Rufnummer kann der Assistent nicht anrufen. Siehe auch [RufLab-Nummer nutzen](/telefonnummern/ruflab-nummer).
+  </Step>
+  <Step title="Aktiviere Outbound-Anrufe im Tab Fähigkeiten">
+    Schalte den Eintrag **Outbound-Anrufe** ein. Ein Fenster zeigt dir die fertige URL und einen Beispiel-Body für genau diesen Assistenten. Über das Zahnrad öffnest du das Fenster jederzeit wieder.
+  </Step>
+  <Step title="Erstelle einen API-Schlüssel">
+    Gehe im Menü auf **Outbound & API** und klicke auf **Neuen Schlüssel erstellen**. Der Schlüssel beginnt mit `rl_live_` und wird genau einmal angezeigt. Speichere ihn sicher, zum Beispiel in deinem Passwort-Manager.
+  </Step>
+  <Step title="Starte einen Test-Anruf">
+    Auf derselben Seite klickst du auf **Test-Anruf**, wählst den Assistenten und trägst deine eigene Handynummer ein. Dein Telefon klingelt innerhalb weniger Sekunden und du hörst, wie der Assistent das Gespräch eröffnet.
+  </Step>
+</Steps>
+
+<Tip>
+  Für den Test-Anruf brauchst du noch keinen API-Schlüssel. Er ist der schnellste Weg zu prüfen, ob Begrüßung und Prompt für ausgehende Gespräche passen.
+</Tip>
+
+## Anruf per API starten
+
+**URL (Methode: POST)**
+
+```text
+https://app.ruflab.com/api/v1/outbound
+```
+
+**Body**
+
+```json
+{
+  "api_key": "rl_live_DEIN_SCHLUESSEL",
+  "to": "+49 151 12345678",
+  "agent_id": "18975aab-358e-4ed7-94a1-11f0d089d2d7"
+}
+```
+
+<ParamField body="api_key" type="string" required>
+  Dein API-Schlüssel. Alternativ kannst du ihn als Header `Authorization: Bearer rl_live_…` senden und im Body weglassen.
+</ParamField>
+
+<ParamField body="to" type="string" required>
+  Rufnummer der Person, die angerufen werden soll. International (`+49 151 12345678`) oder national (`0151 12345678`, wird als deutsche Nummer gelesen). Leerzeichen und Bindestriche sind erlaubt.
+</ParamField>
+
+<ParamField body="agent_id" type="string">
+  Welcher Assistent anruft. Die ID findest du auf der Einstellungsseite des Assistenten. Ohne Angabe ruft dein Assistent mit verbundener Rufnummer an.
+</ParamField>
+
+**Beispiel mit curl**
+
+```bash
+curl -X POST "https://app.ruflab.com/api/v1/outbound" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "api_key": "rl_live_DEIN_SCHLUESSEL",
+    "to": "+49 151 12345678"
+  }'
+```
+
+**Antwort**
+
+```json
+{
+  "id": "7e3c9a2e-5f1b-4c0a-9d2e-1a2b3c4d5e6f",
+  "status": "in_progress",
+  "to": "+4915112345678",
+  "from": "+4921919413975",
+  "created_at": "2026-09-14T09:12:04.318Z",
+  "call": null
+}
+```
+
+Merke dir die `id`. Damit fragst du später Status und Ergebnis ab.
+
+## Mehrere Anrufe auf einmal
+
+Bis zu 500 Rufnummern übergibst du in einer Anfrage an `https://app.ruflab.com/api/v1/outbound/batch`. RufLab arbeitet die Liste automatisch ab, mit so vielen parallelen Gesprächen, wie dein Tarif erlaubt. Du musst nichts takten.
+
+```json
+{
+  "api_key": "rl_live_DEIN_SCHLUESSEL",
+  "calls": [
+    { "to": "+49 151 12345678" },
+    { "to": "+49 176 12345678" }
+  ]
+}
+```
+
+## Status und Ergebnis abfragen
+
+```bash
+curl "https://app.ruflab.com/api/v1/calls/ANRUF_ID" \
+  -H "Authorization: Bearer rl_live_DEIN_SCHLUESSEL"
+```
+
+Sobald das Gespräch beendet ist, enthält die Antwort unter `call` Dauer, Zusammenfassung und Transkript.
+
+| Status | Bedeutung |
+| --- | --- |
+| `queued` | Wartet auf eine freie Leitung oder auf den geplanten Zeitpunkt |
+| `in_progress` | Es klingelt oder das Gespräch läuft |
+| `completed` | Gespräch beendet, Ergebnis liegt vor |
+| `failed` | Nicht zustande gekommen, `error` nennt den Grund, zum Beispiel `call_no_answer` |
+| `cancelled` | Vor dem Start abgebrochen |
+
+Ein Gespräch dauert typischerweise ein bis fünf Minuten. Frage den Status nicht öfter als alle 10 bis 15 Sekunden ab. Mit `GET https://app.ruflab.com/api/v1/calls` bekommst du alle deiner Outbound-Anrufe, neueste zuerst.
+
+## Mit Make.com verbinden
+
+Du brauchst kein Programmieren. In [Make.com](http://Make.com), [Zapier](https://zapier.com) oder n8n genügt ein HTTP-Modul:
+
+| Einstellung | Wert |
+| --- | --- |
+| Methode | `POST` |
+| URL | `https://app.ruflab.com/api/v1/outbound` |
+| Body-Typ | JSON |
+| Body | `api_key` und `to` aus den vorherigen Modulen |
+
+Typischer Ablauf: Neuer Lead im Formular oder CRM → HTTP-Modul startet den Anruf → nach fünf Minuten holt ein zweites HTTP-Modul das Ergebnis ab und schreibt die Zusammenfassung zurück ins CRM. In Make.com heißt das Modul „HTTP → Make a request“, in Zapier „Webhooks by Zapier → Custom Request“.
+
+## Hinweise
+
+<Note>
+  **Einwilligung.** Automatisierte Anrufe an Verbraucher setzen deren vorherige Einwilligung voraus (§ 7 UWG). Du bist als Auftraggeber dafür verantwortlich, dass die angerufenen Personen der telefonischen Kontaktaufnahme zugestimmt haben.
+</Note>
+
+<Note>
+  **Nicht erreicht.** Klingelt es 60 Sekunden ohne Antwort, endet der Anruf mit dem Status `failed` und dem Grund `call_no_answer`. RufLab wiederholt den Anruf nicht automatisch. Starte ihn bei Bedarf erneut.
+</Note>
+
+<Note>
+  **Schlüssel schützen.** Der API-Schlüssel gehört nur auf deinen Server oder in Make.com. Baue ihn nie in eine Website ein, die Besucher im Browser laden. Unter **Outbound & API** kannst du einen Schlüssel jederzeit widerrufen und einen neuen erstellen.
+</Note>
